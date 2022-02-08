@@ -15,10 +15,10 @@ else:
             else:
                 mod = "gains"
             val = int(arg.strip("+-"))
-args = argparse(args)
-t = args.last("t")
 
 # Get Combatant
+args = argparse(args)
+t = args.last("t")
 if t:
     cb = c.get_combatant(t)
 else:
@@ -26,20 +26,19 @@ else:
 
 # Help Mode
 if not mod and not val:
+    # Embed info
     title = "Combat Exhaustion Alias"
-    desc = f'Exhaustion is measured in six levels. An Effect can give a creature one or more levels of exhaustion, as specified in the effect’s description. A creature suffers the Effect of its current level of exhaustion as well as all lower levels.{n}{n}For full details, see `!help exhaust`.{n}{n}'
-
-    desc += f'**Exhaustion Effects**{n}'
+    desc = f'Exhaustion is measured in six levels. An Effect can give a creature one or more levels of exhaustion, as specified in the effect’s description. A creature suffers the Effect of its current level of exhaustion as well as all lower levels.{n}{n}For full details, see `!help exhaust`.{n}{n}**Exhaustion Effects**{n}'
     for i in range(len(exCond)):
         desc += f'{i+1}. {exCond[i].strip(",").strip()}{n}'
-
+    # Combatant Status
     if cb:
         if exEff:=cb.get_effect("Exhaustion"):
             exLvl = int(exEff.name[12])
         else:
             exLvl = 0
-
-# Modify Exhaustion
+            
+# Modify Exhaustion Mode
 elif cb:
     # Get Exhaustion Level
     if exEff:=cb.get_effect("Exhaustion"):
@@ -47,7 +46,6 @@ elif cb:
         cb.remove_effect("Exhaustion")
     else:
         exLvl = 0
-
     # Determine new Exhaustion Level within bounds
     if mod == "gains":
         exLvl += val
@@ -56,7 +54,6 @@ elif cb:
     elif mod == "clears their":
         exLvl = 0
     exLvl = min(6,max(0,exLvl))
-
     # Generate and Apply ieffect 
     exDesc, exArgs = "", ""
     for i in range (0,exLvl):
